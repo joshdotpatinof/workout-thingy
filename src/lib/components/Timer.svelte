@@ -2,7 +2,7 @@
   import ArrowUpFromLine from '@lucide/svelte/icons/arrow-up-from-line';
   import ArrowDownToLine from '@lucide/svelte/icons/arrow-down-to-line';
   import Play from '@lucide/svelte/icons/play';
-  import PauseIcon from '@lucide/svelte/icons/pause';
+  import Pause from '@lucide/svelte/icons/pause';
 
   let { oncompleted }: { oncompleted?: (detail: { minutes: number }) => void } = $props();
 
@@ -14,7 +14,7 @@
   let minutes = $state(10);
   let remaining = $state(0);
   let running = $state(false);
-  let interval: ReturnType<typeof setInterval> | undefined = $state(undefined);
+  let interval: ReturnType<typeof setInterval> | undefined;
   let done = $state(false);
 
   const totalMinutes = $derived(Math.max(1, Math.floor(minutes)));
@@ -75,10 +75,6 @@
     done = false;
   }
 
-  function handleDone() {
-    reset();
-  }
-
   function stop() {
     pause();
   }
@@ -105,7 +101,7 @@
       Complete
     </div>
     <div class="controls">
-      <button class="btn btn-start" onclick={handleDone}>Done</button>
+      <button class="btn btn-start" onclick={reset}>Done</button>
     </div>
   {:else if running || remaining > 0}
     <div class="display">
@@ -133,7 +129,7 @@
     </div>
     <div class="controls">
       {#if running}
-        <button class="btn btn-pause" onclick={pause} aria-label="Pause"><PauseIcon size={20} /></button>
+        <button class="btn btn-pause" onclick={pause} aria-label="Pause"><Pause size={20} /></button>
       {:else}
         <button class="btn btn-start" onclick={start} aria-label="Resume"><Play size={20} /></button>
       {/if}

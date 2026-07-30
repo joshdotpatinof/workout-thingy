@@ -5,7 +5,6 @@
   let { adminKey = '', refreshKey = 0 } = $props();
 
   let entries: { date: string; minutes: number }[] = $state([]);
-  let ready = $state(false);
 
   $effect(() => {
     if (browser) {
@@ -22,7 +21,6 @@
     entries = Object.entries(data)
       .map(([date, minutes]) => ({ date, minutes }))
       .sort((a, b) => b.date.localeCompare(a.date));
-    ready = true;
   }
 
   async function removeEntry(date: string) {
