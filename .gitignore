@@ -1,0 +1,9 @@
+node_modules
+.env
+/.svelte-kit
+/build
+/dist
+.vscode
+.DS_Store
+npm-debug.log
+coverage

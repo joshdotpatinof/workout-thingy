@@ -1,0 +1,17 @@
+{
+  "name": "workout-thingy",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "svelte-kit dev",
+    "build": "svelte-kit build",
+    "preview": "svelte-kit preview",
+    "check": "svelte-kit check"
+  },
+  "devDependencies": {
+    "@sveltejs/kit": "next",
+    "svelte": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}
