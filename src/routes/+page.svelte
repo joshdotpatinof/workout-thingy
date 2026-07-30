@@ -4,11 +4,11 @@
   import History from '$lib/components/History.svelte';
   import Dumbbell from '@lucide/svelte/icons/dumbbell';
 
-  let adminKey = '';
-  let saved = false;
-  let showKeyInput = false;
-  let keyVerified = false;
-  let historyKey = 0;
+  let adminKey = $state('');
+  let saved = $state(false);
+  let showKeyInput = $state(false);
+  let keyVerified = $state(false);
+  let historyKey = $state(0);
 
   onMount(() => {
     const stored = localStorage.getItem('adminKey');
@@ -78,21 +78,21 @@
         type="password"
         placeholder="Enter admin key"
         bind:value={adminKey}
-        on:keydown={(e) => e.key === 'Enter' && saveKey()}
+        onkeydown={(e: KeyboardEvent) => e.key === 'Enter' && saveKey()}
       />
-      <button class="btn-sm" on:click={saveKey}>Save</button>
-      <button class="btn-sm btn-cancel" on:click={() => { showKeyInput = false; }}>Cancel</button>
+      <button class="btn-sm" onclick={saveKey}>Save</button>
+      <button class="btn-sm btn-cancel" onclick={() => { showKeyInput = false; }}>Cancel</button>
     </div>
   {:else if saved}
     <div class="admin-bar">
       <span class="status" class:verified={keyVerified}>
         {keyVerified ? 'Admin mode' : 'Key invalid'}
       </span>
-      <button class="btn-sm" on:click={() => showKeyInput = true}>Change key</button>
-      <button class="btn-sm btn-cancel" on:click={exitAdmin}>Exit admin</button>
+      <button class="btn-sm" onclick={() => showKeyInput = true}>Change key</button>
+      <button class="btn-sm btn-cancel" onclick={exitAdmin}>Exit admin</button>
     </div>
   {:else}
-    <button class="key-toggle" on:click={() => showKeyInput = true}>Admin mode</button>
+    <button class="key-toggle" onclick={() => showKeyInput = true}>Admin mode</button>
   {/if}
 </div>
 
