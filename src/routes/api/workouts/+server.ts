@@ -1,9 +1,9 @@
 import { json } from '@sveltejs/kit';
-import { ADMIN_KEY } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { getWorkouts, markWorkout, unmarkWorkout } from '$lib/server/db';
 
 function isAdmin(request: Request): boolean {
-  return request.headers.get('x-admin-key') === ADMIN_KEY;
+  return request.headers.get('x-admin-key') === env.ADMIN_KEY;
 }
 
 export function GET() {
