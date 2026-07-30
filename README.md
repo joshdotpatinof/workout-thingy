@@ -1,16 +1,42 @@
-# workout-thingy
+# sv
 
-A simple workout timer and tracker webapp. Alternates between push-ups and pull-ups each minute, tracks completed workouts in a log.
+Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
 
-![timer screenshot](./screenshots/timer.png)
+## Creating a project
 
-![log screenshot](./screenshots/log.png)
+If you're seeing this, you've probably already done this step. Congrats!
 
-## Usage
-
-```bash
-npm install
-npm run dev
+```sh
+# create a new project
+npx sv create my-app
 ```
 
-Set a number of minutes and press Start. The timer beeps at each minute change. Enter the admin key to auto-save completed workouts to the log.
+To recreate this project with the same configuration:
+
+```sh
+# recreate this project
+npx sv@0.16.6 create --template minimal --types ts --no-install .
+```
+
+## Developing
+
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+
+```sh
+npm run dev
+
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
+
+## Building
+
+To create a production version of your app:
+
+```sh
+npm run build
+```
+
+You can preview the production build with `npm run preview`.
+
+> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.

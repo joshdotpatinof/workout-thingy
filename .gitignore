@@ -1,11 +1,26 @@
 node_modules
-.env
-.data
+
+# Output
+.output
+.vercel
+.netlify
+.wrangler
 /.svelte-kit
 /build
-/dist
-.vscode
+
+# OS
 .DS_Store
-npm-debug.log
-coverage
-.vercel
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# App data
+.data
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
