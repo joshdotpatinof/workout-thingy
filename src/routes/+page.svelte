@@ -20,13 +20,8 @@
   });
 
   async function verifyKey(key: string) {
-    const res = await fetch('/api/workouts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-admin-key': key,
-      },
-      body: JSON.stringify({ date: '0000-00-00', minutes: 0 }),
+    const res = await fetch('/api/workouts/verify', {
+      headers: { 'x-admin-key': key },
     });
     keyVerified = res.ok;
   }
