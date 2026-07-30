@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import Timer from '$lib/components/Timer.svelte';
   import History from '$lib/components/History.svelte';
-  import Dumbbell from '@lucide/svelte/icons/dumbbell';
+  import Dumbbell from '$lib/components/icons/Dumbbell.svelte';
 
   let adminKey = $state('');
   let saved = $state(false);

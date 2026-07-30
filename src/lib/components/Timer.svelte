@@ -1,8 +1,8 @@
 <script lang="ts">
-  import ArrowUpFromLine from '@lucide/svelte/icons/arrow-up-from-line';
-  import ArrowDownToLine from '@lucide/svelte/icons/arrow-down-to-line';
-  import Play from '@lucide/svelte/icons/play';
-  import Pause from '@lucide/svelte/icons/pause';
+  import ArrowUpFromLine from '$lib/components/icons/ArrowUpFromLine.svelte';
+  import ArrowDownToLine from '$lib/components/icons/ArrowDownToLine.svelte';
+  import Play from '$lib/components/icons/Play.svelte';
+  import Pause from '$lib/components/icons/Pause.svelte';
 
   let { oncompleted }: { oncompleted?: (detail: { minutes: number }) => void } = $props();
 
