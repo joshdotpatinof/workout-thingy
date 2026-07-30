@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import Timer from '$lib/components/Timer.svelte';
   import History from '$lib/components/History.svelte';
-  import Dumbbell from 'lucide-svelte/icons/dumbbell';
+  import Dumbbell from '@lucide/svelte/icons/dumbbell';
 
   let adminKey = '';
   let saved = false;
@@ -47,7 +47,7 @@
     keyVerified = false;
   }
 
-  function handleCompleted(event: CustomEvent<{ minutes: number }>) {
+  function handleCompleted(detail: { minutes: number }) {
     if (!adminKey || !keyVerified) return;
     const today = new Date().toISOString().slice(0, 10);
     fetch('/api/workouts', {
@@ -56,7 +56,7 @@
         'Content-Type': 'application/json',
         'x-admin-key': adminKey,
       },
-      body: JSON.stringify({ date: today, minutes: event.detail.minutes }),
+      body: JSON.stringify({ date: today, minutes: detail.minutes }),
     }).then(() => historyKey++);
   }
 </script>
@@ -98,7 +98,7 @@
 
 <main>
   <div class="left">
-    <Timer on:completed={handleCompleted} />
+    <Timer oncompleted={handleCompleted} />
   </div>
   <div class="right">
     <History {adminKey} refreshKey={historyKey} />

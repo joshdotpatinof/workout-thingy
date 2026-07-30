@@ -1,34 +1,33 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
-  import ArrowUpFromLine from 'lucide-svelte/icons/arrow-up-from-line';
-  import ArrowDownToLine from 'lucide-svelte/icons/arrow-down-to-line';
-  import Play from 'lucide-svelte/icons/play';
-  import PauseIcon from 'lucide-svelte/icons/pause';
+  import ArrowUpFromLine from '@lucide/svelte/icons/arrow-up-from-line';
+  import ArrowDownToLine from '@lucide/svelte/icons/arrow-down-to-line';
+  import Play from '@lucide/svelte/icons/play';
+  import PauseIcon from '@lucide/svelte/icons/pause';
 
-  const dispatch = createEventDispatcher();
+  let { oncompleted }: { oncompleted?: (detail: { minutes: number }) => void } = $props();
 
   const EXERCISES = [
     { name: 'Push-ups', icon: ArrowUpFromLine },
     { name: 'Pull-ups', icon: ArrowDownToLine },
   ];
 
-  let minutes = 10;
-  let remaining = 0;
-  let running = false;
-  let interval: ReturnType<typeof setInterval> | undefined;
-  let done = false;
+  let minutes = $state(10);
+  let remaining = $state(0);
+  let running = $state(false);
+  let interval: ReturnType<typeof setInterval> | undefined = $state(undefined);
+  let done = $state(false);
 
-  $: totalMinutes = Math.max(1, Math.floor(minutes));
-  $: currentMinute = Math.max(0, Math.floor(remaining / 60));
-  $: elapsed = totalMinutes - currentMinute;
-  $: exerciseIndex = elapsed > 0 ? (elapsed - 1) % EXERCISES.length : 0;
-  $: nextIndex = (exerciseIndex + 1) % EXERCISES.length;
-  $: secondsInMinute = remaining % 60;
-  $: showNothing = running && secondsInMinute === 0;
-  $: showingNext = running && secondsInMinute === 1;
-  $: currentExercise = EXERCISES[exerciseIndex];
-  $: nextExercise = EXERCISES[nextIndex];
-  $: progress = totalMinutes > 0 ? elapsed / totalMinutes : 0;
+  const totalMinutes = $derived(Math.max(1, Math.floor(minutes)));
+  const currentMinute = $derived(Math.max(0, Math.floor(remaining / 60)));
+  const elapsed = $derived(totalMinutes - currentMinute);
+  const exerciseIndex = $derived(elapsed > 0 ? (elapsed - 1) % EXERCISES.length : 0);
+  const nextIndex = $derived((exerciseIndex + 1) % EXERCISES.length);
+  const secondsInMinute = $derived(remaining % 60);
+  const showNothing = $derived(running && secondsInMinute === 0);
+  const showingNext = $derived(running && secondsInMinute === 1);
+  const currentExercise = $derived(EXERCISES[exerciseIndex]);
+  const nextExercise = $derived(EXERCISES[nextIndex]);
+  const progress = $derived(totalMinutes > 0 ? elapsed / totalMinutes : 0);
 
   function beep() {
     try {
@@ -59,7 +58,7 @@
       if (remaining <= 0) {
         stop();
         done = true;
-        dispatch('completed', { minutes: totalMinutes });
+        oncompleted?.({ minutes: totalMinutes });
       }
     }, 1000);
   }
@@ -106,7 +105,7 @@
       Complete
     </div>
     <div class="controls">
-      <button class="btn btn-start" on:click={handleDone}>Done</button>
+      <button class="btn btn-start" onclick={handleDone}>Done</button>
     </div>
   {:else if running || remaining > 0}
     <div class="display">
@@ -114,10 +113,10 @@
         <div class="exercise" class:active={running}>
           {#if showingNext}
             <span class="next-label">Next</span>
-            <svelte:component this={nextExercise.icon} size={36} />
+            <nextExercise.icon size={36} />
             <span>{nextExercise.name}</span>
           {:else}
-            <svelte:component this={currentExercise.icon} size={48} />
+            <currentExercise.icon size={48} />
             <span>{currentExercise.name}</span>
           {/if}
         </div>
@@ -134,19 +133,19 @@
     </div>
     <div class="controls">
       {#if running}
-        <button class="btn btn-pause" on:click={pause} aria-label="Pause"><PauseIcon size={20} /></button>
+        <button class="btn btn-pause" onclick={pause} aria-label="Pause"><PauseIcon size={20} /></button>
       {:else}
-        <button class="btn btn-start" on:click={start} aria-label="Resume"><Play size={20} /></button>
+        <button class="btn btn-start" onclick={start} aria-label="Resume"><Play size={20} /></button>
       {/if}
-      <button class="btn btn-reset" on:click={reset}>Reset</button>
+      <button class="btn btn-reset" onclick={reset}>Reset</button>
     </div>
   {:else}
     <p class="hint">Set your minutes and press <strong>Start</strong>.</p>
     <div class="controls">
-      <button class="btn btn-start" on:click={start} aria-label="Start">
+      <button class="btn btn-start" onclick={start} aria-label="Start">
         <Play size={20} />
       </button>
-      <button class="btn btn-reset" on:click={reset}>Reset</button>
+      <button class="btn btn-reset" onclick={reset}>Reset</button>
     </div>
   {/if}
 </div>

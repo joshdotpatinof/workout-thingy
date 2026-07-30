@@ -2,16 +2,17 @@
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
 
-  export let adminKey = '';
-  export let refreshKey = 0;
+  let { adminKey = '', refreshKey = 0 } = $props();
 
-  let entries: { date: string; minutes: number }[] = [];
-  let ready = false;
+  let entries: { date: string; minutes: number }[] = $state([]);
+  let ready = $state(false);
 
-  $: if (browser) {
-    refreshKey;
-    fetchWorkouts();
-  }
+  $effect(() => {
+    if (browser) {
+      refreshKey;
+      fetchWorkouts();
+    }
+  });
 
   onMount(fetchWorkouts);
 
@@ -58,7 +59,7 @@
           <span class="col-mins">{entry.minutes} <span class="check">&#10003;</span></span>
           {#if adminKey}
             <span class="col-del">
-              <button class="del-btn" on:click={() => removeEntry(entry.date)} aria-label="Remove entry">&times;</button>
+              <button class="del-btn" onclick={() => removeEntry(entry.date)} aria-label="Remove entry">&times;</button>
             </span>
           {/if}
         </div>
