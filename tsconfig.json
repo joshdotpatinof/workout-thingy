@@ -1,15 +1,7 @@
 {
+  "extends": "./.svelte-kit/tsconfig.json",
   "compilerOptions": {
-    "module": "ESNext",
-    "target": "ES2020",
-    "moduleResolution": "Node",
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "lib": ["ES2020", "DOM"],
-    "types": ["svelte"]
+    "strict": true
   },
-  "include": ["src/**/*", "svelte.config.js"]
+  "include": ["src/**/*", "svelte.config.js", "vite.config.js"]
 }
