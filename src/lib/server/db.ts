@@ -1,45 +1,55 @@
-import fs from 'fs';
-import path from 'path';
-
-const DATA_DIR = path.resolve('.data');
-const DB_FILE = path.join(DATA_DIR, 'workouts.json');
+import { Redis } from '@upstash/redis';
+import { env } from '$env/dynamic/private';
 
 type Workouts = Record<string, number>;
 
-function read(): Workouts {
-  try {
-    if (!fs.existsSync(DB_FILE)) return {};
-    const raw = fs.readFileSync(DB_FILE, 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return {};
+const KEY = 'workouts';
+
+const redis = env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN
+  ? new Redis({ url: env.UPSTASH_REDIS_REST_URL, token: env.UPSTASH_REDIS_REST_TOKEN })
+  : null;
+
+const memory = new Map<string, number>();
+
+if (!redis) {
+  console.warn('Upstash Redis not configured; using in-memory storage (data will not persist).');
+}
+
+export async function getWorkouts(): Promise<Workouts> {
+  if (!redis) return Object.fromEntries(memory);
+  const raw = await redis.hgetall(KEY);
+  if (!raw) return {};
+  const out: Workouts = {};
+  for (const [field, value] of Object.entries(raw)) {
+    const n = Number(value);
+    if (!Number.isNaN(n)) out[field] = n;
   }
+  return out;
 }
 
-function write(data: Workouts): void {
-  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
-  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
+export async function markWorkout(date: string, minutes: number): Promise<Workouts> {
+  if (redis) {
+    await redis.hset(KEY, { [date]: minutes });
+  } else {
+    memory.set(date, minutes);
+  }
+  return getWorkouts();
 }
 
-export function getWorkouts(): Workouts {
-  return read();
+export async function unmarkWorkout(date: string): Promise<Workouts> {
+  if (redis) {
+    await redis.hdel(KEY, date);
+  } else {
+    memory.delete(date);
+  }
+  return getWorkouts();
 }
 
-export function markWorkout(date: string, minutes: number): Workouts {
-  const data = read();
-  data[date] = minutes;
-  write(data);
-  return data;
-}
-
-export function unmarkWorkout(date: string): Workouts {
-  const data = read();
-  delete data[date];
-  write(data);
-  return data;
-}
-
-export function clearAll(): Workouts {
-  write({});
+export async function clearAll(): Promise<Workouts> {
+  if (redis) {
+    await redis.del(KEY);
+  } else {
+    memory.clear();
+  }
   return {};
 }

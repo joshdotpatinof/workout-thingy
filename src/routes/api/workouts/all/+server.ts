@@ -6,5 +6,5 @@ export async function DELETE({ request }) {
   if (!isAdmin(request)) {
     return json({ error: 'unauthorized' }, { status: 401 });
   }
-  return json(clearAll());
+  return json(await clearAll());
 }
