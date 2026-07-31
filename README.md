@@ -54,6 +54,8 @@ If the env vars are missing, the app falls back to in-memory storage (workouts w
 
 Admin mode is protected by a key, verified against a SHA-256 hash in `src/lib/server/auth.ts`. Enter the key via the **Admin mode** button in the top-right corner; the app stores it in `localStorage` on your device.
 
+> 🤫 This key is for Josh and Josh only. Anyone can use the timer, but the workout log is mine.
+
 ## Scripts
 
 | Command          | Description                         |
