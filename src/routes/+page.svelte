@@ -42,7 +42,12 @@
     keyVerified = false;
   }
 
-  function handleCompleted(detail: { minutes: number }) {
+  function handleCompleted(detail: {
+    minutes: number;
+    pushUps: number;
+    pullUps: number;
+    squats: number;
+  }) {
     if (!adminKey || !keyVerified) return;
     const today = new Date().toISOString().slice(0, 10);
     fetch('/api/workouts', {
@@ -51,7 +56,13 @@
         'Content-Type': 'application/json',
         'x-admin-key': adminKey,
       },
-      body: JSON.stringify({ date: today, minutes: detail.minutes }),
+      body: JSON.stringify({
+        date: today,
+        minutes: detail.minutes,
+        pushUps: detail.pushUps,
+        pullUps: detail.pullUps,
+        squats: detail.squats,
+      }),
     }).then(() => historyKey++);
   }
 </script>

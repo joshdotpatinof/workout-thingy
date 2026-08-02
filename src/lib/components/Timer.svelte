@@ -1,14 +1,25 @@
 <script lang="ts">
   import ArrowUpFromLine from '$lib/components/icons/ArrowUpFromLine.svelte';
   import ArrowDownToLine from '$lib/components/icons/ArrowDownToLine.svelte';
+  import Squat from '$lib/components/icons/Squat.svelte';
   import Play from '$lib/components/icons/Play.svelte';
   import Pause from '$lib/components/icons/Pause.svelte';
 
-  let { oncompleted }: { oncompleted?: (detail: { minutes: number }) => void } = $props();
+  let {
+    oncompleted,
+  }: {
+    oncompleted?: (detail: {
+      minutes: number;
+      pushUps: number;
+      pullUps: number;
+      squats: number;
+    }) => void;
+  } = $props();
 
   const EXERCISES = [
     { name: 'Push-ups', icon: ArrowUpFromLine },
     { name: 'Pull-ups', icon: ArrowDownToLine },
+    { name: 'Squats', icon: Squat },
   ];
 
   let minutes = $state(10);
@@ -58,7 +69,12 @@
       if (remaining <= 0) {
         stop();
         done = true;
-        oncompleted?.({ minutes: totalMinutes });
+        oncompleted?.({
+          minutes: totalMinutes,
+          pushUps: Math.ceil(totalMinutes / EXERCISES.length),
+          pullUps: Math.max(0, Math.ceil((totalMinutes - 1) / EXERCISES.length)),
+          squats: Math.floor(totalMinutes / EXERCISES.length),
+        });
       }
     }, 1000);
   }

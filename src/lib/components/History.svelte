@@ -4,7 +4,13 @@
 
   let { adminKey = '', refreshKey = 0 } = $props();
 
-  let entries: { date: string; minutes: number }[] = $state([]);
+  let entries: {
+    date: string;
+    minutes: number;
+    pushUps: number;
+    pullUps: number;
+    squats: number;
+  }[] = $state([]);
 
   $effect(() => {
     if (browser) {
@@ -17,9 +23,12 @@
 
   async function fetchWorkouts() {
     const res = await fetch('/api/workouts');
-    const data: Record<string, number> = await res.json();
+    const data: Record<
+      string,
+      { minutes: number; pushUps: number; pullUps: number; squats: number }
+    > = await res.json();
     entries = Object.entries(data)
-      .map(([date, minutes]) => ({ date, minutes }))
+      .map(([date, entry]) => ({ date, ...entry }))
       .sort((a, b) => b.date.localeCompare(a.date));
   }
 
@@ -46,7 +55,10 @@
     <div class="table">
       <div class="thead">
         <span class="col-date">Date</span>
-        <span class="col-mins">Minutes</span>
+        <span class="col-num">Mins</span>
+        <span class="col-num">Push-ups</span>
+        <span class="col-num">Pull-ups</span>
+        <span class="col-num">Squats</span>
         {#if adminKey}
           <span class="col-del"></span>
         {/if}
@@ -54,7 +66,10 @@
       {#each entries as entry (entry.date)}
         <div class="trow">
           <span class="col-date">{entry.date}</span>
-          <span class="col-mins">{entry.minutes} <span class="check">&#10003;</span></span>
+          <span class="col-num">{entry.minutes} <span class="check">&#10003;</span></span>
+          <span class="col-num">{entry.pushUps}</span>
+          <span class="col-num">{entry.pullUps}</span>
+          <span class="col-num">{entry.squats}</span>
           {#if adminKey}
             <span class="col-del">
               <button class="del-btn" onclick={() => removeEntry(entry.date)} aria-label="Remove entry">&times;</button>
@@ -103,9 +118,9 @@
     padding: 0.5rem 0.75rem;
     flex: 1;
   }
-  .thead .col-mins {
+  .thead .col-num {
     padding: 0.5rem 0.75rem;
-    width: 90px;
+    width: 70px;
     text-align: center;
   }
   .thead .col-del {
@@ -125,9 +140,9 @@
     flex: 1;
     color: #333;
   }
-  .trow .col-mins {
+  .trow .col-num {
     padding: 0.4rem 0.75rem;
-    width: 90px;
+    width: 70px;
     text-align: center;
     color: #333;
   }

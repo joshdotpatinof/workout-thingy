@@ -1,13 +1,13 @@
 # Josh's Workout Thingy
 
-A simple, self-hosted workout timer that alternates between **push-ups** and **pull-ups** every minute, keeps a running log of completed workouts, and saves everything to the cloud so it works from any device.
+A simple, self-hosted workout timer that cycles through **push-ups**, **pull-ups**, and **squats** every minute, keeps a running log of completed workouts (with minutes and rounds of each exercise), and saves everything to the cloud so it works from any device.
 
 Built with [SvelteKit](https://kit.svelte.dev) + [Svelte 5](https://svelte.dev), deployed on [Vercel](https://vercel.com), with workout history persisted to [Upstash Redis](https://upstash.com).
 
 ## Features
 
-- **Interval timer** — set a number of minutes and start. Each minute alternates between push-ups and pull-ups, with a countdown display, progress bar, and a beep at every minute boundary.
-- **Workout history** — every completed workout is logged with its date and duration. The log is stored in Upstash Redis, so it persists across page reloads, browsers, and redeploys.
+- **Interval timer** — set a number of minutes and start. Each minute cycles through push-ups → pull-ups → squats → push-ups (and so on), with a countdown display, progress bar, and a beep at every minute boundary.
+- **Workout history** — every completed workout is logged with its date, duration, and the number of rounds of push-ups, pull-ups, and squats done. The log is stored in Upstash Redis, so it persists across page reloads, browsers, and redeploys.
 - **Admin mode** — unlock admin features with a key to mark a workout as completed and to delete individual (or all) history entries.
 
 ## Screenshots
